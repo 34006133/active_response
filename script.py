@@ -147,7 +147,7 @@ def main(argv):
 
         """ Start Custom Action Add """
 
-        output = subprocess.run('ss -nputw | egrep ""sh"|"bash"|"csh"|"ksh"|"zsh""', shell=True, capture_output=True, text=True)
+        output = subprocess.run('ss -nputw | egrep ""bash"|"csh"|"ksh"|"zsh""', shell=True, capture_output=True, text=True)
 
         pattern = re.compile("pid=(\d+),")
 
@@ -159,7 +159,7 @@ def main(argv):
         with open("ar-test-result.txt", mode="a") as test_file:
             test_file.write(f"Active response triggered by rule ID: <{str(keys)}>\n")        
             
-            """ End Custom Action Add """
+        """ End Custom Action Add """
 
     elif msg.command == DELETE_COMMAND:
 
