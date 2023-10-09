@@ -150,11 +150,13 @@ def main(argv):
         output = subprocess.run('ss -nputw | egrep ""bash"|"csh"|"ksh"|"zsh""', shell=True, capture_output=True, text=True)
 
         pattern = re.compile("pid=(\d+),")
-
         result = re.findall(pattern, str(output))
 
         for pid in result:
             os.kill(int(pid), signal.SIGKILL)
+        
+        subprocess.run(f"iptables -A INPUT -s {alert['data']['srcip']} -j DROP", shell=True)
+        subprocess.run("netfilter-persistent save", shell=True)
 
         with open("ar-test-result.txt", mode="a") as test_file:
             test_file.write(f"Active response triggered by rule ID: <{str(keys)}>\n")        
