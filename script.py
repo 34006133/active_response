@@ -147,17 +147,24 @@ def main(argv):
 
         """ Start Custom Action Add """
 
-        output = subprocess.run('ss -nputw | egrep ""bash"|"csh"|"ksh"|"zsh""', shell=True, capture_output=True, text=True)
+        output = subprocess.run('ss -nputw | egrep ""bash"|"csh"|"ksh"|"zsh""', shell=True, capture_output=True, text=Tr>
 
-        pattern = re.compile("pid=(\d+),")
-        result = re.findall(pattern, str(output))
+        pid_pattern = re.compile("pid=(\d+),")
+        pid_result = re.findall(pid_pattern, str(output))
 
-        for pid in result:
+        for pid in pid_result:
             os.kill(int(pid), signal.SIGKILL)
-        
-        subprocess.run(f"iptables -A INPUT -s {alert['data']['srcip']} -j DROP", shell=True)
-        subprocess.run("netfilter-persistent save", shell=True)
 
+        ipaddr_pattern = re.compile("(\d+.\d+.\d+.\d+)")
+        ipaddr_result = re.findall(ipaddr_pattern, str(output))
+
+        ipaddr_result.pop(0)
+
+        bad_ip = ipaddr_result[0]
+
+        os.system(f"iptables -A INPUT -s {bad_ip} -j DROP")
+        os.system("netfilter-persistent save")
+        
         with open("ar-test-result.txt", mode="a") as test_file:
             test_file.write(f"Active response triggered by rule ID: <{str(keys)}>\n")        
             
