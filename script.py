@@ -147,7 +147,7 @@ def main(argv):
 
         """ Start Custom Action Add """
 
-        output = subprocess.run('ss -nputw | egrep ""bash"|"csh"|"ksh"|"zsh""', shell=True, capture_output=True, text=Tr>
+        output = subprocess.run('ss -nputw | egrep ""bash"|"csh"|"ksh"|"zsh""', shell=True, capture_output=True, text=True)
 
         pid_pattern = re.compile("pid=(\d+),")
         pid_result = re.findall(pid_pattern, str(output))
